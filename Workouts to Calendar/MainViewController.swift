@@ -46,7 +46,7 @@ class MainViewController: UITableViewController {
         }
         chooseCalendarCell.isSelected = false
     }
-    func syncSettingUpdated(sender: UISwitch) {
+    @objc func syncSettingUpdated(sender: UISwitch) {
         if sender.isOn {
             if HKHealthStore.isHealthDataAvailable() {
                 defaults.set(true, forKey: syncDefaultsKey)

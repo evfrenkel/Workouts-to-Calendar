@@ -58,7 +58,7 @@ class Manager {
                     
                     print("\n🙏 Observer Query Start:")
                     if error != nil {
-                        debugPrint("\(error)")
+                        debugPrint("\(error!)")
                     }
                     self.doQuery()
                 }
@@ -70,7 +70,7 @@ class Manager {
                         debugPrint("Enabled background delivery")
                     }
                     else {
-                        debugPrint("\(error?.localizedDescription)")
+                        debugPrint("\(error!.localizedDescription)")
                     }
                 }
             }
