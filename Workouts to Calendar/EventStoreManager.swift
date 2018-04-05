@@ -121,19 +121,19 @@ class StringGetter {
         case .running:
             title = "🏃 Run"
         case .cycling:
-            title = "🚴 Cycling"
+            title = "🚴 Cycle"
         case .swimming:
-            title = "🏊 Swimming"
+            title = "🏊 Swim"
         case .dance:
-            title = "🕺 Dancing"
+            title = "🕺 Dance"
         case .walking:
-            title = "🚶 Walking"
+            title = "🚶 Walk"
         case .stairs:
-            title = "Stairs"
+            title = "Stair Workout"
         case .hiking:
-            title = "🚶 Hiking"
+            title = "🚶 Hike"
         case .rowing:
-            title = "🚣 Rowing"
+            title = "🚣 Row"
         default:
             title = "🏃 Workout"
         }
