@@ -64,9 +64,9 @@ class SourceChoosingViewController: UITableViewController {
         cell.textLabel?.text = source.title
         
         if sourceIdentifier != nil, source.sourceIdentifier == sourceIdentifier! {
-            cell.accessoryType = UITableViewCellAccessoryType.checkmark
+            cell.accessoryType = UITableViewCell.AccessoryType.checkmark
         } else {
-            cell.accessoryType = UITableViewCellAccessoryType.none
+            cell.accessoryType = UITableViewCell.AccessoryType.none
         }
     
         return cell

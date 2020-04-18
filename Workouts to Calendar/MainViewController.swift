@@ -26,7 +26,7 @@ class MainViewController: UITableViewController {
         source = appDelegate.manager.eventStoreManager.getSourceAccount()
         switchView = UISwitch.init()
         switchView!.isOn = defaults.bool(forKey: syncDefaultsKey)
-        switchView!.addTarget(self, action: #selector(self.syncSettingUpdated(sender:)), for: UIControlEvents.valueChanged)
+        switchView!.addTarget(self, action: #selector(self.syncSettingUpdated(sender:)), for: UIControl.Event.valueChanged)
         syncSwitchViewCell.accessoryView = switchView
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -67,9 +67,9 @@ class MainViewController: UITableViewController {
     func showAlert(title: String, message: String) {
         let alert = UIAlertController.init(title: title,
                                            message: message,
-                                           preferredStyle: UIAlertControllerStyle.alert)
+                                           preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction.init(title: "Dismiss",
-                                           style: UIAlertActionStyle.cancel,
+                                           style: UIAlertAction.Style.cancel,
                                            handler: nil))
         present(alert,
                 animated: true,
