@@ -120,6 +120,8 @@ class StringGetter {
         switch type {
         case .running:
             title = "🏃 Run"
+        case .yoga:
+            title = "🧘🤸‍♂️ Yoga"
         case .cycling:
             title = "🚴 Cycle"
         case .swimming:
