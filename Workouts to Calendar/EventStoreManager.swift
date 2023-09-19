@@ -27,15 +27,19 @@ class EventStoreManager {
     }
     
     func askForCalendarAuth() {
-        eventStore.requestAccess(to: EKEntityType.event) {
+        eventStore.requestFullAccessToEvents()
+        {
             (success, error) in
             if success {
-                self.eventStoreAuthorizationStatus = EKAuthorizationStatus.authorized
+                self.eventStoreAuthorizationStatus = EKAuthorizationStatus.fullAccess
+                print("EKAuthorizationStatus.fullAccess")
             } else {
                 self.eventStoreAuthorizationStatus = EKAuthorizationStatus.denied
+                print("EKAuthorizationStatus.denied")
             }
         }
     }
+        
     
     func getSourceAccount() -> EKSource? {
         if let sourceIdentifier = defaults.string(forKey: sourceDefaultsKey) {
