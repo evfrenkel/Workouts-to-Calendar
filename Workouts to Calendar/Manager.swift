@@ -15,30 +15,50 @@ class Manager {
     private let defaults = UserDefaults.init()
     
     private func doQuery() {
-        if defaults.bool(forKey: syncDefaultsKey) {
-            var anchor: HKQueryAnchor?
-            
-            if !eventStoreManager.needNewCalendar(), let anchorCoded = defaults.object(forKey: anchorDefaultsKey) as? Data {
-                anchor = NSKeyedUnarchiver.unarchiveObject(with: anchorCoded) as? HKQueryAnchor
+        guard defaults.bool(forKey: syncDefaultsKey) else {
+            // Exit if sync is not enabled
+            return
+        }
+
+        var anchor: HKQueryAnchor?
+
+        if !eventStoreManager.needNewCalendar(), let anchorCoded = defaults.data(forKey: anchorDefaultsKey) {
+            do {
+                anchor = try NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: anchorCoded)
+            } catch {
+                // Handle the error here
+                print("Error unarchiving anchor: \(error)")
+            }
+        }
+
+        let anchoredQuery = HKAnchoredObjectQuery(
+            type: HKWorkoutType.workoutType(),
+            predicate: nil,
+            anchor: anchor,
+            limit: HKObjectQueryNoLimit,
+            resultsHandler: self.anchoredQueryResultsHandler
+        )
+
+        healthStore.execute(anchoredQuery)
+    }
+    
+    private func anchoredQueryResultsHandler(query: HKAnchoredObjectQuery, added: [HKSample]?, deleted: [HKDeletedObject]?, anchor: HKQueryAnchor?, error: Error?) {
+        if let error = error {
+            // Handle the error here
+            print("Anchored query error: \(error)")
+        } else {
+            if let anchor = anchor, let anchorData = try? NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true) {
+                defaults.set(anchorData, forKey: anchorDefaultsKey)
             }
             
-            let anchoredQuery = HKAnchoredObjectQuery.init(type: HKWorkoutType.workoutType(),
-                                                           predicate: nil,
-                                                           anchor: anchor,
-                                                           limit: Int(HKObjectQueryNoLimit),
-                                                           resultsHandler: self.anchoredQueryResultsHandler)
-            healthStore.execute(anchoredQuery)
+            if let added = added {
+                eventStoreManager.commitEvents(queryResults: added)
+            }
+            
+            observerCompletion?()
         }
     }
-    private func anchoredQueryResultsHandler(query: HKAnchoredObjectQuery, added: [HKSample]?, deleted: [HKDeletedObject]?, anchor: HKQueryAnchor?, error: Error?) {
-        
-        defaults.set(NSKeyedArchiver.archivedData(withRootObject: anchor as Any), forKey: anchorDefaultsKey)
-        
-        if let added = added {
-            eventStoreManager.commitEvents(queryResults: added)
-        }
-        observerCompletion!()
-    }
+    
     private var observerCompletion: HKObserverQueryCompletionHandler?
     
     // MARK: - Public
