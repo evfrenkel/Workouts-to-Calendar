@@ -27,12 +27,14 @@ class EventStoreManager {
     }
     
     func askForCalendarAuth() {
-        eventStore.requestFullAccessToEvents()
+        eventStore.requestWriteOnlyAccessToEvents()
         {
             (success, error) in
             if success {
-                self.eventStoreAuthorizationStatus = EKAuthorizationStatus.fullAccess
-                print("EKAuthorizationStatus.fullAccess")
+                self.eventStoreAuthorizationStatus = EKAuthorizationStatus.writeOnly
+                print("EKAuthorizationStatus.writeOnly")
+            } else if let error = error {
+                print(error)
             } else {
                 self.eventStoreAuthorizationStatus = EKAuthorizationStatus.denied
                 print("EKAuthorizationStatus.denied")
