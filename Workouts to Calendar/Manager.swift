@@ -31,9 +31,16 @@ class Manager {
             }
         }
 
+        // Calculate the start date (6 months ago from the current date)
+       let calendar = Calendar.current
+       let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: Date())
+       
+       // Create a predicate to filter workouts
+       let predicate = HKQuery.predicateForSamples(withStart: sixMonthsAgo, end: Date(), options: .strictStartDate)
+           
         let anchoredQuery = HKAnchoredObjectQuery(
             type: HKWorkoutType.workoutType(),
-            predicate: nil,
+            predicate: predicate,
             anchor: anchor,
             limit: HKObjectQueryNoLimit,
             resultsHandler: self.anchoredQueryResultsHandler
