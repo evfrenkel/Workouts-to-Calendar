@@ -146,8 +146,8 @@ class StringGetter {
             title = "🏃 Workout"
         }
         
-        if let energy = workout.totalEnergyBurned?.doubleValue(for: HKUnit.calorie()) {
-            title += " (\(Int(round(energy/1000)))cal"
+        if let energy = workout.totalEnergyBurned?.doubleValue(for: HKUnit.largeCalorie()) {
+            title += " (\(Int(round(energy)))cal"
             
             if let distance = workout.totalDistance?.doubleValue(for: HKUnit.mile()) {
                 let thousandthsDistance = round(distance*100)/100
