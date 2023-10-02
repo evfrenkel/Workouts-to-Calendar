@@ -46,6 +46,7 @@ class MainViewController: UITableViewController {
         }
         chooseCalendarCell.isSelected = false
     }
+    
     @objc func syncSettingUpdated(sender: UISwitch) {
         if sender.isOn {
             if HKHealthStore.isHealthDataAvailable() {
@@ -75,23 +76,15 @@ class MainViewController: UITableViewController {
                 animated: true,
                 completion: nil)
     }
+    
+    func promptCalendarAuthorization() {
+        showAlert(title: "Calendar access required",
+                  message: "Enable access in\nSettings > Privacy > Calendars")
+    }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "toSelectSource" {
-            switch EKEventStore.authorizationStatus(for: EKEntityType.event) {
-            case EKAuthorizationStatus.denied,
-                 EKAuthorizationStatus.restricted:
-                showAlert(title: "Calendar access required",
-                          message: "Enable access in\nSettings > Privacy > Calendars")
-                chooseCalendarCell.isSelected = false
-                return false
-            case EKAuthorizationStatus.notDetermined:
-                appDelegate.manager.eventStoreManager.askForCalendarAuth()
-                chooseCalendarCell.isSelected = false
-                return false
-            default:
-                return true
-            }
+            return appDelegate.manager.eventStoreManager.hasCalendarAuth()
         }
         return true
     }

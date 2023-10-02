@@ -18,7 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        if UserDefaults.init().bool(forKey: syncDefaultsKey) {
+        let defaults = UserDefaults.init()
+        
+        if manager.eventStoreManager.hasCalendarAuth() == false {
+            defaults.set(false, forKey: syncDefaultsKey)
+        }
+        
+        else if defaults.bool(forKey: syncDefaultsKey) {
             print("AppDelegate manager.startObserving()")
             manager.startObserving()
         }

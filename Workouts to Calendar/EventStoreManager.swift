@@ -41,8 +41,20 @@ class EventStoreManager {
             }
         }
     }
-        
     
+    func hasCalendarAuth() -> Bool {
+        switch self.eventStoreAuthorizationStatus {
+        case EKAuthorizationStatus.denied,
+             EKAuthorizationStatus.restricted:
+            return false
+        case EKAuthorizationStatus.notDetermined:
+            self.askForCalendarAuth()
+            return false
+        default:
+            return true
+        }
+    }
+        
     func getSourceAccount() -> EKSource? {
         if let sourceIdentifier = defaults.string(forKey: sourceDefaultsKey) {
             return eventStore.source(withIdentifier: sourceIdentifier)
